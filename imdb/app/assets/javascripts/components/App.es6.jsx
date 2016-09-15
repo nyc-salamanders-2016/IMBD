@@ -4,7 +4,7 @@ class App extends React.Component {
      this.state = {
        movies: []
      }
-
+     this.searchFor = this.searchFor.bind(this)
    }
     searchFor(title) {
        $.ajax({
@@ -12,29 +12,29 @@ class App extends React.Component {
           method: 'get'
         })
         .done(function (response) {
-          debugger;
           this.setState( {movies: response.Response == "True" ? response.Search : []} )
       }.bind(this))
      }
 
    componentDidMount(){
-
-     // $.ajax({
-     //   url: 'http://www.omdbapi.com/?s=Love' ,
-     //   method: 'get'
-     // })
-     // .done(function (response) {
-     //  this.setState( {movies: response.Search})
-
-     // }.bind(this))
    }
 
+   submitHandler(event) {
+      event.preventDefault()
+      this.searchFor(this.refs.searchContent.value)
+    }
 
   render() {
     return(
       <div className = "site-container">
         <section className = "nav-bar">
-          <SearchBar searchFunction = {this.searchFor.bind(this)} />
+          <header id="top-nav">
+             <div id="brand">IMDB SEARCH THING</div>
+             <form onSubmit={this.submitHandler.bind(this)} id="search-form">
+               <input ref="searchContent" id="search" type="text" name="query"/>
+             </form>
+             <i className="fa fa-search"></i>
+           </header>
         </section>
         <section className = "movies-container">
           <MovieList movies = {this.state.movies}/>
